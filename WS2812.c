@@ -1,11 +1,11 @@
 //----------------------------------------------------------------------
-// Titel	:	WS2812.c
+// Titel	:	ws2812.c
 //----------------------------------------------------------------------
 // Sprache	:	C
-// Datum	:	Dec 1, 2023
+// Datum	:	01.12.2023
 // Version	:	1.0
 // Autor	:	Diveturtle93
-// Projekt	:	Motorsteuergeraet
+// Projekt	:	WS2812
 //----------------------------------------------------------------------
 
 // Einfuegen der standard Include-Dateien
@@ -20,13 +20,13 @@
 
 // Einfuegen der eigenen Include Dateien
 //----------------------------------------------------------------------
-#include "WS2812.h"
+#include "ws2812.h"
 //----------------------------------------------------------------------
 
 // Variablen definieren
 //----------------------------------------------------------------------
-uint8_t LED_Data[MAX_LED][4];												// Farben fuer die einzelnen LEDs
-uint16_t pwmData[20 + (24 * MAX_LED) + 60 + 1];								// Array fuer PWM Daten
+uint8_t LED_Data[WS2812_MAX_LED][4];										// Farben fuer die einzelnen LEDs
+uint16_t pwmData[20 + (24 * WS2812_MAX_LED) + 60 + 1];						// Array fuer PWM Daten
 volatile uint8_t datasentflag = 0;											// Datenflag fuer Senden per DMA
 //----------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ void WS2812_Send_Wait (void)
 	}
 
 	// Daten der LED Farben konvertieren in PWM
-	for (int i = 0; i < MAX_LED; i++)
+	for (int i = 0; i < WS2812_MAX_LED; i++)
 	{
 		// Daten der LED
 		color = ((LED_Data[i][1] << 16) | (LED_Data[i][2] << 8) | (LED_Data[i][3]));
@@ -106,10 +106,12 @@ void WS2812_Send_Wait (void)
 
 	// Starte DMA und sende Daten fuer PWM
 	HAL_TIM_PWM_Start_DMA(&htim3, TIM_CHANNEL_2, (uint32_t *)pwmData, indx);
+	
+	// Setze Flag zurueck
+	datasentflag = 0;
 
 	// Warten bis alle Daten gesendet wurden und Interrupt DMA stoppt
 	while (!datasentflag){};
-	datasentflag = 1;
 }
 //----------------------------------------------------------------------
 
@@ -133,7 +135,7 @@ uint8_t WS2812_Send (void)
 		}
 
 		// Daten der LED Farben konvertieren in PWM
-		for (int i = 0; i < MAX_LED; i++)
+		for (int i = 0; i < WS2812_MAX_LED; i++)
 		{
 			// Daten der LED
 			color = ((LED_Data[i][1] << 16) | (LED_Data[i][2] << 8) | (LED_Data[i][3]));
