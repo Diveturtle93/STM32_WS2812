@@ -3,9 +3,9 @@
 //----------------------------------------------------------------------
 // Sprache	:	C
 // Datum	:	01.12.2023
-// Version	:	1.0
 // Autor	:	Diveturtle93
 // Projekt	:	WS2812
+// Quelle	:
 //----------------------------------------------------------------------
 
 // Einfuegen der standard Include-Dateien
@@ -18,7 +18,7 @@
 #include "tim.h"
 //----------------------------------------------------------------------
 
-// Einfuegen der eigenen Include Dateien
+// Einfuegen der eigenen Include-Dateien
 //----------------------------------------------------------------------
 #include "ws2812.h"
 //----------------------------------------------------------------------
@@ -26,7 +26,7 @@
 // Variablen definieren
 //----------------------------------------------------------------------
 TIM_HandleTypeDef *ws2812_htim;												// Timer Handle
-uint32_t channel;															// Timer Channel
+uint32_t ws2812_channel;													// Timer Channel
 uint8_t LED_Data[WS2812_MAX_LED][4];										// Farben fuer die einzelnen LEDs
 uint16_t pwmData[20 + (24 * WS2812_MAX_LED) + 60 + 1];						// Array fuer PWM Daten
 volatile uint8_t datasentflag = 1;											// Datenflag fuer Senden per DMA
@@ -40,7 +40,7 @@ void WS2812_Init (TIM_HandleTypeDef *timer, uint32_t timer_channel)
 	ws2812_htim = timer;
 
 	// Channel muss vor der Initialisierung gesetzt werden, damit die Funktionen wissen mit welchem Channel sie arbeiten
-	channel = timer_channel;
+	ws2812_channel = timer_channel;
 
 	// Alle LEDs auf Aus setzen
 	for (uint8_t i = 0; i < WS2812_MAX_LED; i++)
@@ -126,7 +126,7 @@ void WS2812_Send_Wait (void)
 	indx++;
 
 	// Starte DMA und sende Daten fuer PWM
-	HAL_TIM_PWM_Start_DMA(ws2812_htim, channel, (uint32_t *)pwmData, indx);
+	HAL_TIM_PWM_Start_DMA(ws2812_htim, ws2812_channel, (uint32_t *)pwmData, indx);
 	
 	// Setze Flag zurueck
 	datasentflag = 0;
@@ -194,7 +194,7 @@ uint8_t WS2812_Send (void)
 		indx++;
 
 		// Starte DMA und sende Daten fuer PWM
-		HAL_TIM_PWM_Start_DMA(ws2812_htim, channel, (uint32_t *)pwmData, indx);
+		HAL_TIM_PWM_Start_DMA(ws2812_htim, ws2812_channel, (uint32_t *)pwmData, indx);
 
 		// Datenflag zuruecksetzen, ueberspringt naechste Uebertragung, wenn noch nicht abgeschlossen
 		datasentflag = 0;
@@ -211,12 +211,12 @@ uint8_t WS2812_Send (void)
 
 // Timer Callback fuer DMA
 //----------------------------------------------------------------------
-void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+void HAL_TIM_PWM_PulseFinishedCallback (TIM_HandleTypeDef *htim)
 {
 	if (htim == ws2812_htim)
 	{
 		// DMA stoppen
-		HAL_TIM_PWM_Stop_DMA(ws2812_htim, channel);
+		HAL_TIM_PWM_Stop_DMA(ws2812_htim, ws2812_channel);
 
 		// Flag setzen damit "while" aus WS2812_send verlassen werden kann
 		// Flag auch wichtig fuer WS2812_Send, damit naechste Uebertragung gestartet werden kann
