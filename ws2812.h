@@ -49,6 +49,11 @@
 #define WS2812_DEV								1
 //----------------------------------------------------------------------
 
+// Konstanten definieren
+//----------------------------------------------------------------------
+#define WS2812_MAX_LED							1							// Anzahl der LEDs
+//----------------------------------------------------------------------
+
 // Typedefines definieren
 //----------------------------------------------------------------------
 typedef struct																// TypeDef fuer feste Farbenzuordnung
@@ -57,11 +62,6 @@ typedef struct																// TypeDef fuer feste Farbenzuordnung
 	uint8_t green;
 	uint8_t blue;
 } WS2812_Color;
-//----------------------------------------------------------------------
-
-// Konstanten definieren
-//----------------------------------------------------------------------
-#define WS2812_MAX_LED							1							// Anzahl der LEDs
 //----------------------------------------------------------------------
 
 // Farben definieren

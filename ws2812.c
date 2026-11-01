@@ -94,10 +94,10 @@ void WS2812_Send_Wait (void)
 		color = ((LED_Data[i][1] << 16) | (LED_Data[i][2] << 8) | (LED_Data[i][3]));
 
 		// Konvertieren
-		for (uint8_t j = 23; j >= 0; j--)
+		for (uint8_t j = 24; j > 0; j--)
 		{
 			// Bit = 1 langer High Pulse, Bit = 0 kurzer High Pulse
-			if (color & (1 << j))
+			if (color & (1UL << (j - 1)))
 			{
 				// ca. 2/3 High, 850ns
 				pwmData[indx] = 87;
@@ -162,10 +162,10 @@ uint8_t WS2812_Send (void)
 			color = ((LED_Data[i][1] << 16) | (LED_Data[i][2] << 8) | (LED_Data[i][3]));
 
 			// Konvertieren
-			for (uint8_t j = 23; j >= 0; j--)
+			for (uint8_t j = 24; j > 0; j--)
 			{
 				// Bit = 1 langer High Pulse, Bit = 0 kurzer High Pulse
-				if (color & (1 << j))
+				if (color & (1UL << (j - 1)))
 				{
 					// ca. 2/3 High, 850ns
 					pwmData[indx] = 87;
