@@ -1,50 +1,17 @@
 //----------------------------------------------------------------------
-// Titel	:	WS2812.h
+// Titel	:	ws2812.h
 //----------------------------------------------------------------------
 // Sprache	:	C
-// Datum	:	Dec 1, 2023
-// Version	:	1.0
+// Datum	:	01.12.2023
 // Autor	:	Diveturtle93
-// Projekt	:	Motorsteuergeraet
+// Projekt	:	WS2812
+// Quelle	:
 //----------------------------------------------------------------------
 
-// Saveguard symbol
+// Sicherheitssymbol
 //----------------------------------------------------------------------
 #pragma once
 //----------------------------------------------------------------------
-
-// Bibliothek benoetigt Timer 3 PWM Channel und DMA
-// Konfiguration fuer den Timer muss am Motorsteuergeraet sein:
-// Clock Source:					Interne Clock
-// Channel2:						PWM Generation CH2
-// Prescaler:						0
-// Counter:							Up
-// Periode:							135 - 1
-// Internal Clock division:			0
-// Auto-Reload:						Disable
-// Master/Slave:					Disable
-// Trigger Event:					Reset
-// Mode:							PWM-Mode 1
-// Pulse:							0
-// Output compare Preload:			Enable
-// Fast Mode:						Enable
-// CH Polarity:						Low
-
-// Interrupts
-// Timer 3 Global:					Enable
-// DMA 1 Channel 5:					Enable
-
-// Pin Config
-// Mode:							Alternative Push Pull
-// Pull up/Pull down:				No
-// Speed:							High
-
-// DMA
-// Mode:							Normal
-// Increment:						Nur Memory
-// Data size:						Half Word / Half word
-// Direction:						Memory to Peripheral
-// Priority:						High
 
 // Dateiheader definieren
 //----------------------------------------------------------------------
@@ -62,14 +29,21 @@
 
 //----------------------------------------------------------------------
 
-// Einfuegen der eigenen Include Dateien
+// Einfuegen der eigenen Include-Dateien
 //----------------------------------------------------------------------
 
+//----------------------------------------------------------------------
+
+// Definiere Debug-Symbole
+//----------------------------------------------------------------------
+#ifdef DEBUG
+	#define DEBUG_WS2812
+#endif
 //----------------------------------------------------------------------
 
 // Version definieren
 //----------------------------------------------------------------------
-#define WS2812_MAJOR							0
+#define WS2812_MAJOR							1
 #define WS2812_MINOR							0
 #define WS2812_PATCH							0
 #define WS2812_DEV								0
@@ -77,7 +51,7 @@
 
 // Konstanten definieren
 //----------------------------------------------------------------------
-#define MAX_LED									1
+#define WS2812_MAX_LED							1							// Anzahl der LEDs
 //----------------------------------------------------------------------
 
 // Typedefines definieren
@@ -108,11 +82,11 @@ static const WS2812_Color WS2812_MAGENTA = {0xFF, 0, 0xFF};					// Magenta
 static const WS2812_Color WS2812_ROSE = {0xFF, 0, 0x80};					// Rosa, Rose
 //----------------------------------------------------------------------
 
-
 // Funktionen definieren
 //----------------------------------------------------------------------
-void SetLED (uint8_t LED_Num, uint8_t red, uint8_t green, uint8_t blue);	// Setze die Farben der einzelnen LEDs
-void SetLED_color (uint8_t LED_Num, WS2812_Color color);					// Setze die Farbe mit fixem Farbwert
+void WS2812_Init (TIM_HandleTypeDef *timer, uint32_t timer_channel);		// Initialisierung der Datenstrukturen
+void WS2812_SetLED (uint8_t LED_Num, uint8_t red, uint8_t green, uint8_t blue);	// Setze die Farben der einzelnen LEDs
+void WS2812_SetLED_color (uint8_t LED_Num, WS2812_Color color);				// Setze die Farbe mit fixem Farbwert
 void WS2812_Send_Wait (void);												// Sende Daten als PWM, mit Wartezeit
 uint8_t WS2812_Send (void);													// Sende Daten als PWM, keine Wartezeit
 //----------------------------------------------------------------------
