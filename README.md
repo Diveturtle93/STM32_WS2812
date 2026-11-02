@@ -27,6 +27,8 @@ Aufbau einer Übertragung:
 | Abschluss | 1 | 255 | Pin dauerhaft aktiv |
 
 Je LED werden 24 Bit gesendet, das höchstwertige Bit zuerst, in der Reihenfolge Rot, Grün, Blau.
+Das weicht vom WS2812B-Datenblatt ab, das Grün, Rot, Blau vorgibt. Die Reihenfolge ist mit den
+verwendeten LEDs getestet. Bei LEDs, die GRB erwarten, sind Rot und Grün vertauscht.
 
 ## Dateien
 

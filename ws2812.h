@@ -43,10 +43,10 @@
 
 // Version definieren
 //----------------------------------------------------------------------
-#define WS2812_MAJOR							0
+#define WS2812_MAJOR							1
 #define WS2812_MINOR							0
 #define WS2812_PATCH							0
-#define WS2812_DEV								1
+#define WS2812_DEV								0
 //----------------------------------------------------------------------
 
 // Konstanten definieren
